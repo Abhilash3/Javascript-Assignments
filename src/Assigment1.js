@@ -21,9 +21,8 @@ function basicOp(operation, value1, value2) {
 
 // Transportation on vacation
 const perDay = 40;
-const conditionCheck = (a, b) => a(b);
-const greaterThanOrEqual7 = a => conditionCheck(x => x >= 7, a);
-const lessThan3 = a => conditionCheck(x => x < 3, a);
+const greaterThanOrEqual7 = a => a >= 7;
+const lessThan3 = a => a < 3;
 function rentalCarCost(d) {
   let cost = d * perDay;
   return greaterThanOrEqual7(d) && cost - 50 || !lessThan3(d) && cost - 20 || cost;
