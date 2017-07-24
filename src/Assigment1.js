@@ -21,8 +21,8 @@ function basicOp(operation, value1, value2) {
 
 // Transportation on vacation
 const perDay = 40;
-const greaterThanOrEqual7 = a => a >= 7;
-const greaterThanOrEqual3 = a => a >= 3;
+const GE = (a, b) => a >= b;
 function rentalCarCost(d) {
-  return d * perDay - (greaterThanOrEqual7(d) && 50 || greaterThanOrEqual3(d) && 20 || 0);
+  return d * perDay - (GE(d, 7) && 50 || GE(d, 3) && 20 || 0);
 }
+
