@@ -1,4 +1,4 @@
-const template = a => (expression => !expression && a || expression(a));
+const template = a => expression => expression ? expression(a) : a;
 
 const zero = template(0);
 const one = template(1);
@@ -11,7 +11,7 @@ const seven = template(7);
 const eight = template(8);
 const nine = template(9);
 
-const plus = a => (b => b + a);
-const minus = a => (b => b - a);
-const times = a => (b => b * a);
-const dividedBy = a => (b => b / a);
+const plus = a => b => b + a;
+const minus = a => b => b - a;
+const times = a => b => b * a;
+const dividedBy = a => b => b / a;
