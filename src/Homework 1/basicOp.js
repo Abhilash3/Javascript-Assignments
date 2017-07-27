@@ -1,4 +1,4 @@
-const op = {
+let op = {
     '-': (a, b) => a - b,
     '+': (a, b) => a + b,
     '*': (a, b) => a * b,
