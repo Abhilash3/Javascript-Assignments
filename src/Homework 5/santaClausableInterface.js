@@ -1,5 +1,3 @@
 function isSantaClausable(obj) {
-    return obj.sayHoHoHo instanceof Function &&
-        obj.distributeGifts instanceof Function &&
-        obj.goDownTheChimney instanceof Function;
+    return ['sayHoHoHo', 'distributeGifts', 'goDownTheChimney'].every(a => obj[a] instanceof Function);
 }

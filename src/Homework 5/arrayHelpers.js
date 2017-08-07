@@ -5,7 +5,7 @@ Array.prototype.cube = function() {
     return this.map(a => a * a * a);
 }
 Array.prototype.average = function() {
-    return this.reduce((a, b) => a + b, 0) / this.length;
+    return this.sum() / this.length;
 }
 Array.prototype.sum = function() {
     return this.reduce((a, b) => a + b, 0);
