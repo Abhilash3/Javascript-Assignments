@@ -1,0 +1,113 @@
+body {
+    background: #f5ffc4;
+    text-align: center;
+}
+
+#main {
+    margin-right: auto;
+    margin-left: auto;
+    width: 96%;
+}
+
+#main .search {
+    text-align: center;
+}
+
+#main input#search {
+    width: 75%;
+    padding: 10px;
+    border: solid 1px #dcdcdc;
+    transition: box-shadow 0.3s, border 0.3s;
+}
+
+#main input#search:focus {
+    border: solid 1px #707070;
+    box-shadow: 0 0 5px 1px #969696;
+}
+
+#container {
+    margin-top: 20px;
+}
+
+.element {
+    width: 400px;
+    display: inline-block;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin: 10px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f6f6f6;
+}
+
+.element.small {
+    width: 250px;
+}
+
+.element .image {
+    padding-top: 20px;
+    width: 320px;
+    height: 180px;
+}
+
+.element .image.small {
+    width: 120px;
+    height: 90px;
+}
+
+.element .title {
+    margin-top: 20px;
+    height: 80px;
+    font-weight: bold;
+    cursor: pointer
+}
+
+.element .content {
+    text-align: left;
+    display: inline-flex;
+    padding: 5px;
+}
+
+#controls {
+    position: absolute;
+    bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#controls ul {
+    text-align: center;
+}
+
+#controls ul li {
+    border-radius: 2px;
+    border: 1px solid #ccc;
+    display: inline-block;
+    list-style-type: none;
+    width: 30px;
+    padding: 5px;
+    margin: 2px;
+    cursor: pointer
+}
+
+#controls ul.small li.num {
+    width: 25px;
+    padding-left: 2px;
+    padding-right: 2px;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+#controls li.active {
+    background-color: #f6f6f6;
+    font-weight: bold;
+}
+
+#controls li:hover {
+    background-color: #f6f6f6;
+}
+
+.hide {
+    display: none; !important
+}
