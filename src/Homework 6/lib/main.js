@@ -16,7 +16,6 @@ requirejs(['text!../template/main.html',
     });
     Pagination.init(container);
     
-    
     main.querySelector('input#search').addEventListener('keyup', event => {
         if (event.keyCode !== 13) {
             return;
@@ -28,6 +27,8 @@ requirejs(['text!../template/main.html',
         } else {        
             service.search(query).then(data => {
                 Pagination.start(data, query);
+            }).catch(err => {
+                container.querySelector('#viewPort').textContent = 'Search failed with\n' + err;
             });
         }
     });

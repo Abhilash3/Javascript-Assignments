@@ -28,7 +28,7 @@ define(['service', 'element', 'util'], function(service, Element, util) {
             return;
         }
         
-        if (pages - value < 6) {
+        if (pages - value < 3) {
             service.search(query, nextPageToken).then(data => {
                 nextPageToken = data.nextPageToken;
                 
@@ -37,8 +37,7 @@ define(['service', 'element', 'util'], function(service, Element, util) {
                 });
                 retrieveDetails(newElements);
                 Array.prototype.push.apply(elements, newElements);
-            
-                let viewPort = container.querySelector('#viewPort');
+                
                 newElements.forEach(element => {
                     element.render(viewPort);
                     element.addClass('hide');
@@ -53,7 +52,7 @@ define(['service', 'element', 'util'], function(service, Element, util) {
         controls.appendChild(util.stringToElement('<li>' + PREV + '</li>'));
         
         let start = value > 2 ? value - 2 : 1, count = 0;
-        while(count++ < 5) {            
+        while(count++ < 5 && start <= elements.length) {            
             let content = '<li class=\'num';
             if (start === value) {
                 content += ' active';
@@ -102,7 +101,7 @@ define(['service', 'element', 'util'], function(service, Element, util) {
                 if (elements.length) {
                     let index = (currentPage - 1) * perPage;
                     resize();
-                    changePage(index / perPage + 1);
+                    changePage(+(index / perPage).toFixed(0) + 1);
                 }
             });
             
