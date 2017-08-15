@@ -1,6 +1,5 @@
 requirejs(['text!../template/main.html',
-           'util', 'element', 'service',
-           'pagination'], function(template, util, Element, service, Pagination) {
+           'util', 'service', 'pagination'], function(template, util, service, Pagination) {
     
     let main = document.querySelector('#main');
     main.appendChild(util.stringToElement(template));
@@ -28,7 +27,7 @@ requirejs(['text!../template/main.html',
             service.search(query).then(data => {
                 Pagination.start(data, query);
             }).catch(err => {
-                container.querySelector('#viewPort').textContent = 'Search failed with\n' + err;
+                container.querySelector('#viewPort').textContent = 'Search failed: ' + err;
             });
         }
     });

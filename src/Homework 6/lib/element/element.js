@@ -1,12 +1,11 @@
-define(['text!../template/element.html',
-           'util', 'service'], function(elementTemplate, util, service) {
+define(['text!../template/element.html', 'util'], function(template, util) {
     
-    const ELEMENT_TEMPLATE = util.stringToElement(elementTemplate);
+    const ELEMENT_TEMPLATE = util.stringToElement(template);
     
     let processDate = date => {
         let d = new Date(date),
-        month = '' + (d.getMonth() + 1),
-        day = '' + d.getDate(),
+        month = d.getMonth() + 1,
+        day = d.getDate(),
         year = d.getFullYear();
 
         month = month.length < 2 && '0' + month || month;
