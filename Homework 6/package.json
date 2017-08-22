@@ -1,0 +1,32 @@
+{
+  "name": "search-youtube",
+  "version": "1.0.0",
+  "description": "search youtube test suite",
+  "main": "karma.config.js",
+  "dependencies": {
+    "karma-jasmine": "^1.1.0",
+    "karma": "^1.7.0"
+  },
+  "devDependencies": {
+    "jasmine": "^2.7.0",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-coverage": "^1.1.1",
+    "karma-htmlfile-reporter": "^0.3.5",
+    "karma-jasmine": "^1.1.0",
+    "karma-requirejs": "^1.1.0",
+    "requirejs": "^2.3.4"
+  },
+  "scripts": {
+    "test": "karma start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Abhilash3/Javascript-Assignments.git"
+  },
+  "author": "Abhilash",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Abhilash3/Javascript-Assignments/issues"
+  },
+  "homepage": "https://github.com/Abhilash3/Javascript-Assignments#readme"
+}

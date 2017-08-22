@@ -13,6 +13,7 @@ requirejs(['text!../template/main.html',
             service.open(target.parentNode.getAttribute('id'));
         }
     });
+    window.addEventListener('beforeunload', Pagination.destroy);
     Pagination.init(container);
     
     main.querySelector('input#search').addEventListener('keyup', event => {

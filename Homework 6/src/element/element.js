@@ -17,32 +17,16 @@ define(['text!../template/element.html', 'util'], function(template, util) {
     let convert = item => {
         let obj = Object.create(null);
         //obj.Description = item.snippet.description || '';
-        obj['Published Date'] = processDate(item.snippet.publishedAt);
-        obj.Views = item.statistics.viewCount || 0;
-        obj.Likes = item.statistics.likeCount || 0;
-        obj.Author = item.snippet.channelTitle;
+        obj['Published Date'] = item.snippet && processDate(item.snippet.publishedAt) || '';
+        obj.Views = item.statistics && item.statistics.viewCount || 0;
+        obj.Likes = item.statistics && item.statistics.likeCount || 0;
+        obj.Author = item.snippet && item.snippet.channelTitle || '';
         return obj;
     };
     
     class Element {
         
-        render(container) {
-            container.appendChild(this.node);
-        }
-        
-        width() {
-            return this.node.clientWidth;
-        }
-        
-        addClass(Class) {
-            this.node.classList.add(Class);
-        }
-        
-        removeClass(Class) {
-            this.node.classList.remove(Class);
-        }
-        
-        update(item) {
+        constructor(item) {
             this.id = item.id.videoId;
         
             let element = ELEMENT_TEMPLATE.cloneNode(true);
@@ -60,20 +44,36 @@ define(['text!../template/element.html', 'util'], function(template, util) {
                 obj = item.snippet.thumbnails.default;
             }
             image.setAttribute('src', obj.url);
-            
-            return this;
         }
         
-        static updateElement(element, item) {
+        render(container) {
+            container.appendChild(this.node);
+        }
+        
+        width() {
+            return this.node.clientWidth;
+        }
+        
+        hide() {
+            this.node.classList.add('hide');
+        }
+        
+        show() {
+            this.node.classList.remove('hide');
+        }
+        
+        update(item) {
             let content = '<table><body>';
             item = convert(item);
             for (let prop in item) {
                 content += '<tr><td>' + prop + ': </td><td>' + item[prop] + '</td></tr>';
             }
             content += '</body></table>';
-            element.node.querySelector('div.content').appendChild(util.stringToElement(content));
+            let element = this.node.querySelector('div.content');
+            element.textContent = '';
+            element.appendChild(util.stringToElement(content));
         }
     }
     
-    return Element;
+    return { create: item => new Element(item) };
 });

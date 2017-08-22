@@ -1,7 +1,7 @@
 requirejs.config({
-    baseUrl: 'lib',
+    baseUrl: 'src',
     paths: {
-        text: '../external/text/text',
+        text: '../lib/text/text',
         
         element: 'element/element',
         pagination: 'helper/pagination',
