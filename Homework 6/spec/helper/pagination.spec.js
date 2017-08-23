@@ -73,6 +73,10 @@ define(['pagination', 'element', 'util', 'service'], function(Pagination, Elemen
                     util.isMobile = () => true;
                 });
                 
+                afterAll(function() {
+                    util.isMobile = () => false;
+                });
+                
                 it('has swipe functionality', function() {
                     let viewPortRegister = listeners.get(container.viewPort);
                     
@@ -88,20 +92,19 @@ define(['pagination', 'element', 'util', 'service'], function(Pagination, Elemen
                     expect(viewPortRegister.touchend).toBeDefined();
                     expect(viewPortRegister.touchend.length).toEqual(1);
                 });
-                
-                afterAll(function() {
-                    util.isMobile = () => false;
-                });
             });
         });
         
         describe('start', function() {
             
-            let createDefault, detailsDefault, widthDefault, stringToElementDefault;
+            let createDefault, detailsDefault, widthDefault, stringToElementDefault, addEventListenerDefault;
             let data = { nextPageToken: 'next', items: new Array(10).fill({}) };
             let creationCount, updatedObjs, renderedObjs, hiddenObjs;
             
             beforeAll(function() {
+                addEventListenerDefault = window.addEventListener;
+                window.addEventListener = eventRegisterer.bind(null, window);
+                    
                 stringToElementDefault = util.stringToElement;
                 util.stringToElement = str => str;
                 
@@ -128,6 +131,7 @@ define(['pagination', 'element', 'util', 'service'], function(Pagination, Elemen
                 Element.create = createDefault;
                 util.width = widthDefault;
                 util.stringToElement = stringToElementDefault;
+                window.addEventListener = addEventListenerDefault;
             });
             
             beforeEach(function() {
@@ -159,7 +163,7 @@ define(['pagination', 'element', 'util', 'service'], function(Pagination, Elemen
             
             describe('allows pagination', function() {
                 
-                beforeEach(function() {                
+                beforeEach(function() {
                     container.controls.trigger = eventTriggerer.bind(null, container.controls);
                     container.viewPort.trigger = eventTriggerer.bind(null, container.viewPort);
                     
@@ -235,6 +239,38 @@ define(['pagination', 'element', 'util', 'service'], function(Pagination, Elemen
                     expect(hiddenObjs.size).toEqual(9);
                     expect(Array.from(hiddenObjs).map(a => a.id).includes(3)).toEqual(false);
                 });
+                
+                it('to re-render elements with resize', function() {
+                    pages = [];
+                    container.controls.trigger('click', { target: { textContent: '5' } });
+                    
+                    expect(pages.length).toEqual(7);
+                    expect(pages[0]).toEqual('<li>Prev</li>');
+                    expect(pages[1]).toEqual('<li class=\'num\'>3</li>');
+                    expect(pages[2]).toEqual('<li class=\'num\'>4</li>');
+                    expect(pages[3]).toEqual('<li class=\'num active\'>5</li>');
+                    expect(pages[4]).toEqual('<li class=\'num\'>6</li>');
+                    expect(pages[5]).toEqual('<li class=\'num\'>7</li>');
+                    expect(pages[6]).toEqual('<li>Next</li>');
+                    
+                    expect(hiddenObjs.size).toEqual(9);
+                    
+                    util.width = () => 240;
+                    pages = [];
+                    eventTriggerer.bind(null, window)('resize');
+                    
+                    expect(pages.length).toEqual(7);
+                    expect(pages[0]).toEqual('<li>Prev</li>');
+                    expect(pages[1]).toEqual('<li class=\'num\'>1</li>');
+                    expect(pages[2]).toEqual('<li class=\'num\'>2</li>');
+                    expect(pages[3]).toEqual('<li class=\'num active\'>3</li>');
+                    expect(pages[4]).toEqual('<li class=\'num\'>4</li>');
+                    expect(pages[5]).toEqual('<li class=\'num\'>5</li>');
+                    expect(pages[6]).toEqual('<li>Next</li>');
+                    expect(hiddenObjs.size).toEqual(8);
+                    
+                    util.width = () => 120;
+                });
             
                 describe('lazy loads elements', function() {
                     
@@ -280,8 +316,6 @@ define(['pagination', 'element', 'util', 'service'], function(Pagination, Elemen
             beforeEach(function() {
                 container.controls.textContent = {};
                 container.viewPort.textContent = {};
-                container.controls.addEventListener = () => {};
-                container.viewPort.addEventListener = () => {};
             });
             
             it('clears the page', function() {
@@ -308,9 +342,6 @@ define(['pagination', 'element', 'util', 'service'], function(Pagination, Elemen
             });
             
             beforeEach(function() {
-                container.controls.addEventListener = () => {};
-                container.viewPort.addEventListener = () => {};
-                
                 Pagination.init(container);
             
                 container.controls.removeEventListener = eventRegisterer.bind(null, container.controls);
@@ -332,6 +363,10 @@ define(['pagination', 'element', 'util', 'service'], function(Pagination, Elemen
                     util.isMobile = () => true;
                 });
                 
+                afterAll(function() {
+                    util.isMobile = () => false;
+                });
+                
                 it('remove swipe functionality', function() {
                     let viewPortRegister = listeners.get(container.viewPort);
                     
@@ -346,10 +381,6 @@ define(['pagination', 'element', 'util', 'service'], function(Pagination, Elemen
                     
                     expect(viewPortRegister.touchend).toBeDefined();
                     expect(viewPortRegister.touchend.length).toEqual(1);
-                });
-                
-                afterAll(function() {
-                    util.isMobile = () => false;
                 });
             });
         });

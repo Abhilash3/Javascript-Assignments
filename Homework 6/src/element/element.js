@@ -8,8 +8,8 @@ define(['text!../template/element.html', 'util'], function(template, util) {
         day = d.getDate(),
         year = d.getFullYear();
 
-        month = month.length < 2 && '0' + month || month;
-        day = day.length < 2 && '0' + day || day;
+        month = month < 10 && '0' + month || month;
+        day = day < 10 && '0' + day || day;
 
         return [month, day, year].join('/');
     };

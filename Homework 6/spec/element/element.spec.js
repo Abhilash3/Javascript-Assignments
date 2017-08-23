@@ -3,14 +3,19 @@ define(['element', 'util'], function(Element, util) {
         let element, item = { id: { videoId: 'id' }, snippet: { title: 'title',
             thumbnails: { medium: { url: 'medium', }, default: { url: 'default' } } } };
             
-        let isMobileDefault;
+        let isMobileDefault, stringToElementDefault;
         
         beforeAll(function() {
             isMobileDefault = util.isMobile;
             util.isMobile = () => false;
+			
+			stringToElementDefault = util.stringToElement;
+			util.stringToElement = str => str;
         });
             
         afterAll(function() {
+			util.stringToElement = stringToElementDefault;
+			
             util.isMobile = isMobileDefault;
         });
         
@@ -23,6 +28,7 @@ define(['element', 'util'], function(Element, util) {
             it('from item object', function() {                    
                 expect(element.node.getAttribute('id')).toEqual(item.id.videoId);
                 expect(element.node.querySelector('img.image').getAttribute('src')).toEqual(item.snippet.thumbnails.medium.url);
+                expect(element.node.querySelector('img.image').classList.contains('small')).toEqual(false);
                 expect(element.node.querySelector('div.title').textContent).toEqual(item.snippet.title);
             });
             
@@ -32,15 +38,15 @@ define(['element', 'util'], function(Element, util) {
                     util.isMobile = () => true;
                 });
                 
+                afterAll(function() {
+                    util.isMobile = () => false;
+                });
+                
                 it('in case of mobile', function() {                        
                     expect(element.node.classList.contains('small')).toEqual(true);
                     expect(element.node.querySelector('img.image').getAttribute('src')).toEqual(item.snippet.thumbnails.default.url);
                     expect(element.node.querySelector('img.image').classList.contains('small')).toEqual(true);
                     expect(element.node.querySelector('div.title').textContent).toEqual(item.snippet.title);
-                });
-                
-                afterAll(function() {
-                    util.isMobile = () => false;
                 });
             });
         });
@@ -68,13 +74,24 @@ define(['element', 'util'], function(Element, util) {
                 expect(container.appendChild).toHaveBeenCalledWith(element.node);
             });
         
-            it('can update elements if internal element exists', function() {
+            it('update the internal element with new details', function() {
                 let content = element.node.querySelector('div.content');
-                spyOn(content, 'appendChild');
-                
-                element.update({});
-                expect(content.appendChild).toHaveBeenCalled();
-                
+                content.appendChild = jasmine.createSpy('element appendChild').and.callThrough();
+				
+				let d = new Date(), month = d.getMonth() + 1, day = d.getDate(), year = d.getFullYear();
+                month = month < 10 && '0' + month || month;
+				day = day < 10 && '0' + day || day;
+				
+                element.update({
+					snippet: { publishedAt: d, channelTitle: 'channelTitle' },
+					statistics: { viewCount: 'viewCount', likeCount: 'likeCount' }
+				});
+                expect(content.appendChild).toHaveBeenCalledWith('<table><body>' +
+				    '<tr><td>Published Date: </td><td>' + [month, day, year].join('/') + '</td></tr>' + 
+				    '<tr><td>Views: </td><td>viewCount</td></tr>' + 
+				    '<tr><td>Likes: </td><td>likeCount</td></tr>' + 
+				    '<tr><td>Author: </td><td>channelTitle</td></tr>' + 
+				'</body></table>');
             });
         });
     });
