@@ -1,6 +1,6 @@
 define(['service', 'element', 'util'], function(service, Element, util) {
     
-    let elements = [], elementSize;
+    let elements = [], elementSize, completed;
     let query, nextPageToken;
     let pages, perPage, currentPage;
     let controls, viewPort;
@@ -47,7 +47,7 @@ define(['service', 'element', 'util'], function(service, Element, util) {
                 event.preventDefault();
                 let diff = info.end - info.start;
                 if (abs(diff) >= min) {
-                    changePage(currentPage + (diff > 0 && 1 || -1));
+                    changePage(currentPage + (diff < 0 && 1 || -1));
                 }
                 info = {};
             }
@@ -55,7 +55,7 @@ define(['service', 'element', 'util'], function(service, Element, util) {
     })();
     
     function resize() {
-        perPage = Math.floor(util.width() / elementSize);
+        perPage = Math.floor(util.width() / elementSize) || 1;
         pages = Math.ceil(elements.length / perPage);
     };
     
@@ -75,11 +75,11 @@ define(['service', 'element', 'util'], function(service, Element, util) {
             return;
         }
         
-        if (pages - value < 3) {
+        if (!completed && pages - value < 3) {
             service.search(query, nextPageToken).then(data => {
                 nextPageToken = data.nextPageToken;
                 
-                newElements = data.items.map(a => Element.create(a));
+                let newElements = data.items.map(a => Element.create(a));
                 retrieveDetails(newElements);
                 Array.prototype.push.apply(elements, newElements);
                 
@@ -88,7 +88,9 @@ define(['service', 'element', 'util'], function(service, Element, util) {
                     element.hide();
                 });
                 
+				completed = newElements.length === 0;
                 resize();
+				changePage(value);
             });
         }
         chooseElements(value);
@@ -96,7 +98,7 @@ define(['service', 'element', 'util'], function(service, Element, util) {
         controls.textContent = '';
         controls.appendChild(util.stringToElement('<li>' + PREV + '</li>'));
         
-        let start = value > 2 ? value - 2 : 1, count = 0;
+        let start = ((a, b) => a > b ? b : a)(((a, b) => a > b ? a : b)(value - 2, 1), pages - 4), count = 0;
         while(count++ < 5 && start <= elements.length) {            
             let content = '<li class=\'num';
             if (start === value) {
@@ -147,6 +149,8 @@ define(['service', 'element', 'util'], function(service, Element, util) {
             
             elementSize = (elements[0] && elements[0].width() || 0) + 50;
             resize();
+			
+			completed = false;
             changePage(1);
         },
         stop: () => {
